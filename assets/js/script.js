@@ -8,11 +8,13 @@ $(function () {
   // function? How can DOM traversal be used to get the "hour-x" id of the
   // time-block containing the button that was clicked? How might the id be
   // useful when saving the description in local storage?
-  var today = moment().format('dddd, MMM Do YYYY');
-$("#currentDay").textContent(today);
+
+  //display the current date on screen.
+  var today = dayjs('dddd, MMM Do YYYY');
+$("#currentDay").textContent = today;
 
   //listener on the save button
-  $(saveBtn).on("click", function() {
+  $(".saveBtn").on("click", function() {
     //grab the description values
     var descriptionText = $(this).siblings(".description").val();
     var timeOfDay = $(this).parent().attr("id");
@@ -34,7 +36,27 @@ $("#currentDay").textContent(today);
     //iterate over each block
     $(".time-block").each(function() {
       var currentBlock = parseInt($(this).attr("id").split("hour")[1]);
+    
+      //checks the current hour to determine if an hour is in the past, present or future.
+      //If it's in the past add the past class, if its in the present add the present class..
+      //Otherwise it's in the future class.  Only one of these three classes should be added at a time.
+      if (currentBlock < currentTime) {
+        $(this).removeClass("future");
+        $(this).removeClass("present");
+        $(this).addClass("past");
+      }
+      else if (currentBlock === currentTime) {
+        $(this).removeClass("future");
+        $(this).removeClass("past");
+        $(this).addClass("present");
+      }
+      else {
+        $(this).removeClass("past");
+        $(this).removeClass("present");
+        $(this).addClass("future");
+      }
     })
+   
   }
   // TODO: Add code to get any user input that was saved in localStorage and set
   // the values of the corresponding textarea elements. HINT: How can the id
